@@ -11,6 +11,11 @@
   justify-content: space-between;
 }
 
+.todos__item__clickable {
+  width: 100%;
+  cursor: text;
+}
+
 .todos__item__form {
   display: flex;
   justify-content: space-between;

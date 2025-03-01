@@ -21,23 +21,37 @@ export const TodoItem = (props: {
   }
 
   return (
-    <li className="todos__item">
+    <li
+      className={['todos__item', todo.done ? 'todos__item--done' : '']
+        .filter((cls) => cls != '')
+        .join(' ')}
+    >
       {!editMode && (
         <>
-          <span>{todo.title}</span>
+          <div
+            onClick={() => setEditMode(true)}
+            className="todos__item__clickable"
+          >
+            <span>{todo.title}</span>
+          </div>
           <button
             onClick={() => setEditMode(true)}
             className="todos__item__button"
           >
-            Edit
+            Done
           </button>
         </>
       )}
       {editMode && (
         <form onSubmit={handleSubmit} className="todos__item__form">
-          <input type="text" defaultValue={todo.title} ref={inputRef} />
+          <input
+            type="text"
+            defaultValue={todo.title}
+            ref={inputRef}
+            autoFocus
+          />
           <button type="submit" className="todos__item__button">
-            Done
+            Save
           </button>
         </form>
       )}

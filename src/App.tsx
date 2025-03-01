@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { TodoGroup } from './components/TodoGroup'
 import { ITodo } from './models/todo'
@@ -27,7 +27,25 @@ const initialTodoGroups: ITodoGroup[] = [
 ]
 
 function App() {
-  const [todoGroups, setTodoGroups] = useState(initialTodoGroups)
+  const [todoGroups, setTodoGroups] = useState<ITodoGroup[]>([])
+
+  useEffect(() => {
+    if (todoGroups.length === 0) return
+
+    localStorage.setItem('todo-groups', JSON.stringify(todoGroups))
+  }, [todoGroups])
+
+  useEffect(() => {
+    const localTodoGroups = JSON.parse(
+      localStorage.getItem('todo-groups') ?? '[]',
+    )
+
+    if (!Array.isArray(localTodoGroups) || localTodoGroups.length === 0) {
+      setTodoGroups(initialTodoGroups)
+    } else {
+      setTodoGroups(localTodoGroups)
+    }
+  }, [])
 
   const handleAddTodo = (groupId: number, todo: ITodo) => {
     setTodoGroups((currentGroups) =>
@@ -77,6 +95,7 @@ function App() {
     <div className="todos">
       {todoGroups.map((group) => (
         <TodoGroup
+          key={group.id}
           group={group}
           onAddTodo={handleAddTodo}
           onEditTodo={handleEditTodo}
