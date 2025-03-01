@@ -1,19 +1,9 @@
+import { useState } from 'react'
 import './App.css'
+import { TodoGroup } from './components/TodoGroup'
+import { ITodoGroup } from './models/todoModel'
 
-interface Todo {
-  id: number
-  title: string
-  description: string
-  done?: boolean
-}
-
-interface TodoGroup {
-  id: number
-  title: string
-  todos: Todo[]
-}
-
-const todoGroups: TodoGroup[] = [
+const initialTodoGroups: ITodoGroup[] = [
   {
     id: 0,
     title: 'Group 1',
@@ -36,19 +26,12 @@ const todoGroups: TodoGroup[] = [
 ]
 
 function App() {
+  const [todoGroups, setTodoGroups] = useState(initialTodoGroups)
+
   return (
     <div className="todos">
       {todoGroups.map((group) => (
-        <div key={group.id} className="todos__group">
-          <h2>{group.title}</h2>
-          <ul className="todos__group__list">
-            {group.todos.map((todo) => (
-              <li key={todo.id} className="todos__group__item">
-                {todo.title}
-              </li>
-            ))}
-          </ul>
-        </div>
+        <TodoGroup group={group} />
       ))}
     </div>
   )
