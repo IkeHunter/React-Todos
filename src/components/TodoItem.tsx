@@ -8,7 +8,7 @@ export const TodoItem = (props: { todo: ITodo }) => {
   const { todo } = props
   const [editMode, setEditMode] = useState(false)
   const inputRef = useRef<HTMLInputElement | null>(null)
-  const { editTodo, completeTodo, deleteTodo } = useContext(TodoContext)
+  const { editTodo, toggleTodoDone, deleteTodo } = useContext(TodoContext)
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -20,34 +20,27 @@ export const TodoItem = (props: { todo: ITodo }) => {
   }
 
   return (
-    <li
-      className={['todos__item', todo.done ? 'todos__item--done' : '']
-        .filter((cls) => cls != '')
-        .join(' ')}
-    >
+    <li className={`todos__item${todo.done ? ' todos__item--done' : ''}`}>
       {!editMode && (
         <>
-          <div
-            onClick={() => setEditMode(true)}
-            className="todos__item__clickable"
+          <input
+            type="checkbox"
+            name="completed"
+            id={todo.id.toString()}
+            checked={todo.done ?? false}
+            onChange={() => toggleTodoDone(todo.id)}
+            className="todos__item__checkbox"
+          />
+          <span onClick={() => setEditMode(true)} className="todos__item__text">
+            {todo.title}
+          </span>
+
+          <button
+            onClick={() => deleteTodo(todo.id)}
+            className="todos__item__button"
           >
-            <span>{todo.title}</span>
-          </div>
-          {(!todo.done && (
-            <button
-              onClick={() => completeTodo(todo.id)}
-              className="todos__item__button"
-            >
-              Done
-            </button>
-          )) || (
-            <button
-              onClick={() => deleteTodo(todo.id)}
-              className="todos__item__button"
-            >
-              Delete
-            </button>
-          )}
+            Delete
+          </button>
         </>
       )}
       {editMode && (

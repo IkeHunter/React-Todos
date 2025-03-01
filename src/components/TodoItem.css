@@ -6,25 +6,35 @@
   box-shadow:
     0px 1px 1px #091e4240,
     0px 0px 1px #091e424f;
-    
+
   display: flex;
   justify-content: space-between;
+  align-items: center;
+  gap: 3px;
 }
 
-.todos__item__clickable {
+.todos__item__text {
   width: 100%;
   cursor: text;
+}
+
+.todos__item--done .todos__item__text {
+  text-decoration: line-through;
+}
+
+.todos__item__checkbox {
+  cursor: pointer;
 }
 
 .todos__item__form {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  
+
   input {
     display: block;
     width: 100%;
-    
+
     border: none;
     border-bottom: 1px solid grey;
     font-size: inherit;
@@ -34,7 +44,7 @@
 }
 
 .todos__item__button {
-  background-color: #0C66E4;
+  background-color: #0c66e4;
   color: white;
   border: none;
   border-radius: 5px;

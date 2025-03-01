@@ -29,8 +29,9 @@ const initialTodoGroups: ITodoGroup[] = [
 interface TodoContext {
   addTodo: (groupId: number, todo: ITodo) => void
   editTodo: (todoId: number, data: Partial<ITodo>) => void
-  completeTodo: (todoId: number) => void
+  // completeTodo: (todoId: number) => void
   deleteTodo: (todoId: number) => void
+  toggleTodoDone: (todoId: number) => void
 }
 
 export const TodoContext = createContext<TodoContext>(null!)
@@ -100,8 +101,36 @@ function App() {
     })
   }
 
-  const handleCompleteTodo = (todoId: number) => {
-    handleEditTodo(todoId, { done: true })
+  const handleToggleTodoDone = (todoId: number) => {
+    setTodoGroups((currentGroups) => {
+      const group = currentGroups.find((group) =>
+        group.todos.some((todo) => todo.id === todoId),
+      )
+
+      if (!group) return currentGroups
+
+      const updatedGroup: ITodoGroup = {
+        ...group, // Keep existing group fields
+        todos: group.todos.map((todo) => {
+          if (todo.id !== todoId) {
+            return todo // Ignore irrelevant todos
+          }
+
+          // Return updated todo
+          return {
+            ...todo,
+            done: !todo.done,
+          }
+        }),
+      }
+
+      return [
+        ...currentGroups.filter(
+          (currentGroup) => currentGroup.id !== updatedGroup.id,
+        ),
+        updatedGroup,
+      ].sort((a, b) => a.id - b.id)
+    })
   }
 
   const handleDeleteTodo = (todoId: number) => {
@@ -131,7 +160,7 @@ function App() {
       value={{
         addTodo: handleAddTodo,
         editTodo: handleEditTodo,
-        completeTodo: handleCompleteTodo,
+        toggleTodoDone: handleToggleTodoDone,
         deleteTodo: handleDeleteTodo,
       }}
     >
