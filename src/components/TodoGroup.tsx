@@ -7,9 +7,10 @@ import './TodoGroup.css'
 
 export const TodoGroup = (props: {
   group: ITodoGroup
-  onAddItem: (groupId: number, item: ITodo) => void
+  onAddTodo: (groupId: number, item: ITodo) => void
+  onEditTodo: (todoId: number, data: Partial<ITodo>) => void
 }) => {
-  const { group, onAddItem } = props
+  const { group, onAddTodo, onEditTodo } = props
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -19,10 +20,9 @@ export const TodoGroup = (props: {
     if (!inputRef.current) return
 
     // Add item to group
-    onAddItem(group.id, {
+    onAddTodo(group.id, {
       id: Date.now(),
       title: inputRef.current.value,
-      description: 'Testing testing',
     })
 
     // Reset form
@@ -34,15 +34,15 @@ export const TodoGroup = (props: {
       <h2>{group.title}</h2>
       <ul className="todos__group__list">
         {group.todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} />
+          <TodoItem key={todo.id} todo={todo} onEditTodo={onEditTodo} />
         ))}
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="todos__group__form">
           <input
             type="text"
             id={`new-task-${group.id}`}
             ref={inputRef}
-            className="todos__group__item"
-            placeholder='Enter a title'
+            className="todos__item"
+            placeholder="Enter a title"
           />
         </form>
       </ul>

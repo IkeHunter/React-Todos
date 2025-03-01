@@ -1,4 +1,4 @@
-.todos__group__item {
+.todos__item {
   background-color: #ffffff;
   color: #151515;
   border-radius: 8px;
@@ -6,4 +6,34 @@
   box-shadow:
     0px 1px 1px #091e4240,
     0px 0px 1px #091e424f;
+    
+  display: flex;
+  justify-content: space-between;
+}
+
+.todos__item__form {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  
+  input {
+    display: block;
+    width: 100%;
+    
+    border: none;
+    border-bottom: 1px solid grey;
+    font-size: inherit;
+    padding: 5px;
+    flex: 0 1 100%;
+  }
+}
+
+.todos__item__button {
+  background-color: #0C66E4;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  padding: 3px 8px;
+  cursor: pointer;
 }
