@@ -1,34 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
+interface Todo {
+  id: number
+  title: string
+  description: string
+  done?: boolean
+}
 
+interface TodoGroup {
+  id: number
+  title: string
+  todos: Todo[]
+}
+
+const todoGroups: TodoGroup[] = [
+  {
+    id: 0,
+    title: 'Group 1',
+    todos: [
+      { id: 0, title: 'Test 1', description: 'Lorem ipsum' },
+      { id: 1, title: 'Test 2', description: 'Lorem ipsum' },
+      { id: 2, title: 'Test 3', description: 'Lorem ipsum' },
+    ],
+  },
+  {
+    id: 1,
+    title: 'Group 2',
+    todos: [{ id: 1, title: 'Test 2', description: 'Lorem ipsum' }],
+  },
+  {
+    id: 2,
+    title: 'Group 3',
+    todos: [{ id: 2, title: 'Test 3', description: 'Lorem ipsum' }],
+  },
+]
+
+function App() {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="todos">
+      {todoGroups.map((group) => (
+        <div key={group.id} className="todos__group">
+          <h2>{group.title}</h2>
+          <ul className="todos__group__list">
+            {group.todos.map((todo) => (
+              <li key={todo.id} className="todos__group__item">
+                {todo.title}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
   )
 }
 
