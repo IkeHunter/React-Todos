@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
+import { createContext, useEffect, useState } from 'react'
 import './App.css'
 import { TodoGroup } from './components/TodoGroup'
 import { ITodo } from './models/todo'
-import { ITodoGroup } from './models/todoModel'
+import { ITodoGroup } from './models/todoGroup'
 
 const initialTodoGroups: ITodoGroup[] = [
   {
@@ -25,6 +25,15 @@ const initialTodoGroups: ITodoGroup[] = [
     todos: [{ id: 20, title: 'Test 3' }],
   },
 ]
+
+interface TodoContext {
+  addTodo: (groupId: number, todo: ITodo) => void
+  editTodo: (todoId: number, data: Partial<ITodo>) => void
+  completeTodo: (todoId: number) => void
+  deleteTodo: (todoId: number) => void
+}
+
+export const TodoContext = createContext<TodoContext>(null!)
 
 function App() {
   const [todoGroups, setTodoGroups] = useState<ITodoGroup[]>([])
@@ -91,17 +100,47 @@ function App() {
     })
   }
 
+  const handleCompleteTodo = (todoId: number) => {
+    handleEditTodo(todoId, { done: true })
+  }
+
+  const handleDeleteTodo = (todoId: number) => {
+    setTodoGroups((currentGroups) => {
+      const group = currentGroups.find((group) =>
+        group.todos.some((todo) => todo.id === todoId),
+      )
+
+      if (!group) return currentGroups
+
+      const updatedGroup: ITodoGroup = {
+        ...group, // Keep existing group fields
+        todos: group.todos.filter((todo) => todo.id !== todoId),
+      }
+
+      return [
+        ...currentGroups.filter(
+          (currentGroup) => currentGroup.id !== updatedGroup.id,
+        ),
+        updatedGroup,
+      ].sort((a, b) => a.id - b.id)
+    })
+  }
+
   return (
-    <div className="todos">
-      {todoGroups.map((group) => (
-        <TodoGroup
-          key={group.id}
-          group={group}
-          onAddTodo={handleAddTodo}
-          onEditTodo={handleEditTodo}
-        />
-      ))}
-    </div>
+    <TodoContext.Provider
+      value={{
+        addTodo: handleAddTodo,
+        editTodo: handleEditTodo,
+        completeTodo: handleCompleteTodo,
+        deleteTodo: handleDeleteTodo,
+      }}
+    >
+      <div className="todos">
+        {todoGroups.map((group) => (
+          <TodoGroup key={group.id} group={group} />
+        ))}
+      </div>
+    </TodoContext.Provider>
   )
 }
 

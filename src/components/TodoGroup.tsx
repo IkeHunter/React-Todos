@@ -1,17 +1,14 @@
-import { ITodoGroup } from '../models/todoModel'
+import { ITodoGroup } from '../models/todoGroup'
 import { TodoItem } from './TodoItem'
 
-import { FormEvent, useRef } from 'react'
-import { ITodo } from '../models/todo'
+import { FormEvent, useContext, useRef } from 'react'
+import { TodoContext } from '../App'
 import './TodoGroup.css'
 
-export const TodoGroup = (props: {
-  group: ITodoGroup
-  onAddTodo: (groupId: number, item: ITodo) => void
-  onEditTodo: (todoId: number, data: Partial<ITodo>) => void
-}) => {
-  const { group, onAddTodo, onEditTodo } = props
+export const TodoGroup = (props: { group: ITodoGroup }) => {
+  const { group } = props
   const inputRef = useRef<HTMLInputElement>(null)
+  const { addTodo } = useContext(TodoContext)
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     // Prevent page from reloading
@@ -20,7 +17,7 @@ export const TodoGroup = (props: {
     if (!inputRef.current) return
 
     // Add item to group
-    onAddTodo(group.id, {
+    addTodo(group.id, {
       id: Date.now(),
       title: inputRef.current.value,
     })
@@ -34,7 +31,7 @@ export const TodoGroup = (props: {
       <h2>{group.title}</h2>
       <ul className="todos__group__list">
         {group.todos.map((todo) => (
-          <TodoItem key={todo.id} todo={todo} onEditTodo={onEditTodo} />
+          <TodoItem key={todo.id} todo={todo} />
         ))}
         <form onSubmit={handleSubmit} className="todos__group__form">
           <input
